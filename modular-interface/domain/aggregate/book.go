@@ -7,5 +7,5 @@ import (
 
 type Book struct {
 	book   book.Book
-	author *user.User
+	author user.User
 }
