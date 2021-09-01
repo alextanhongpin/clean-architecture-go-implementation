@@ -1,8 +1,6 @@
 package user
 
 import (
-	"errors"
-
 	"github.com/google/uuid"
 )
 
@@ -39,10 +37,19 @@ func (e Entity) ID() uuid.UUID { return e.id }
 func (e Entity) Name() string  { return e.name }
 
 func (e Entity) WithName(name string) (User, error) {
-	if name == "" {
-		return e, errors.New("user: name is required")
+	validName, err := NewUserName(name)
+	if err != nil {
+		return e, err
 	}
-
-	e.name = name
+	e.name = validName
 	return e, nil
+}
+
+// SimpleQuery returns an even smaller scope of the field.
+// Using interface is powerful, it allows you to restrict fields without
+// modifying structs.
+// This can even be returned at the application layer (usecase) if we want an
+// even more simpler representation instead of the full domain entity.
+type SimpleQuery interface {
+	Name() string
 }
